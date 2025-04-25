@@ -4,6 +4,8 @@ import { useParams } from "react-router-dom";
 import { assets } from "../../assets/assets";
 import humanizeDuration from "humanize-duration";
 import YouTube from "react-youtube";
+import Footer from "../../components/student/Footer";
+import Rating from "../../components/student/Rating";
 
 const Player = () => {
   const { enrolledCourses, calculateChapterTime } = useContext(AppContext);
@@ -71,8 +73,8 @@ const Player = () => {
                       className="list-disc md:pl-10 pl-4 pr-4 py-2 text-gray-600 border-t 
                               border-gray-300"
                     >
-                      {chapter.chapterContent.map((lecture, index) => (
-                        <li key={index} className="flex items-start gap-2 py-1">
+                      {chapter.chapterContent.map((lecture, i) => (
+                        <li key={i} className="flex items-start gap-2 py-1">
                           <img
                             src={
                               false ? assets.blue_tick_icon : assets.play_icon
@@ -92,7 +94,7 @@ const Player = () => {
                                     setPlayerData({
                                       ...lecture,
                                       chapter: index + 1,
-                                      lecture: index + 1,
+                                      lecture: i + 1,
                                     })
                                   }
                                   className="text-blue-500 cursor-pointer"
@@ -115,31 +117,38 @@ const Player = () => {
                 </div>
               ))}
           </div>
+          <div className="flex items-center gap-2 py-3 mt-10">
+            <h1 className="text-xl font-bold">Rate this Course:</h1>
+            <Rating initialRating={0} />
+          </div>
         </div>
-        {/* {left column} */}
-        <div>
+        {/* {Right column} */}
+        <div className="md:mt-10">
           {playerData ? (
             <div>
-              {console.log(Boolean(playerData))}
               <YouTube
                 videoId={playerData.lectureUrl.split("/").pop()}
                 iframeClassName="w-full aspect-video"
               />
-              <div>
+              <div className="flex justify-between items-center mt-1">
                 <p>
                   {playerData.chapter}.{playerData.lecture}{" "}
                   {playerData.lectureTitle}{" "}
                 </p>
+                <button className="text-blue-600">
+                  {false ? "Completed" : "Mark Completed"}
+                </button>
               </div>
             </div>
           ) : (
             <img
-              src={courseData ? courseData.courseThumbnail : ""}
+              src={courseData ? courseData.courseThumbnail : null}
               alt="thumbnail"
             />
           )}
         </div>
       </div>
+      <Footer />
     </>
   );
 };
